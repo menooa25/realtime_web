@@ -12,12 +12,23 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - '5432:5432'
+  redis:
+    image: redis:6.2.6-bullseye
+    container_name: redis
+    ports:
+      - '6379:6379'
   web:
     build: ./web
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8080"
+    command: bash -c "
+              python manage.py migrate
+              && python manage.py runserver 0.0.0.0:8080
+              & celery -A web beat -l INFO
+              & celery -A web worker -l INFO
+            "
     volumes:
       - ./web:/app
     ports:
       - "8080:8080"
     depends_on:
       - db
+      - redis
