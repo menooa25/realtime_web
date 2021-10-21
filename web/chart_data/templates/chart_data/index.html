@@ -1,7 +1,25 @@
 {% extends 'base.html' %}
 {% block title %}
- Real time chart
+    Real time chart
 {% endblock %}
 {% block main %}
-hi
+    <div class="container">
+        <div class="row">
+            <div class="col-12"><h1 id="price">hi</h1></div>
+        </div>
+    </div>
+    <script>
+        const websocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chart_data/'
+        );
+        websocket.onmessage = function (event) {
+            console.log(event)
+            console.log(event.data)
+        }
+    </script>
+{% endblock %}
+{% block script %}
+
 {% endblock %}
