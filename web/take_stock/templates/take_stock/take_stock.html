@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}
+    Take stock realtime data
+{% endblock %}
+{% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <h4 class="text-center my-4">
+                    <a href="{% url 'chart_view' %}">Real time chart</a>
+                </h4>
+                <table class="table table-dark">
+                    <thead>
+                    <tr>
+                        <th scope="col">high</th>
+                        <th scope="col">low</th>
+                        <th scope="col">max</th>
+                        <th scope="col">min</th>
+                        <th scope="col">open</th>
+                        <th scope="col">close</th>
+                        <th scope="col">current</th>
+                        <th scope="col">name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>655</td>
+                        <td>654</td>
+                        <td>455</td>
+                        <td>567</td>
+                        <td>5255</td>
+                        <td>1416</td>
+                        <td>fulad</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script>
+        const websocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/take_stocks/'
+        );
+        websocket.onmessage = function (event) {
+            console.log(JSON.parse(event.data))
+        }
+    </script>
+{% endblock %}

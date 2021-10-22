@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'chart_data'
+    'chart_data',
+    'take_stock'
 ]
 
 MIDDLEWARE = [
