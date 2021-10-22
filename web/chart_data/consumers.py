@@ -1,4 +1,5 @@
 import json
+import time
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -12,7 +13,6 @@ class ChartConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard('chart_channel', self.channel_name)
 
     async def send_chart(self, event):
-        print(event)
-        last_price = event['last_price']
-        context = json.dumps({'last_price': last_price})
+        last_chart_data = event['last_chart_data']
+        context = json.dumps(last_chart_data)
         await self.send(context)

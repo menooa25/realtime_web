@@ -5,21 +5,60 @@
 {% block main %}
     <div class="container">
         <div class="row">
-            <div class="col-12"><h1 id="price">hi</h1></div>
+            <div class="col-12">
+                <div class="p-3" id="canvas_wrapper">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
-    <script>
-        const websocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chart_data/'
-        );
-        websocket.onmessage = function (event) {
-            console.log(event)
-            console.log(event.data)
-        }
-    </script>
+
 {% endblock %}
 {% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let times = [];
+        let last_prices = []
+        const data = {
+            labels: times,
+            datasets: [{
+                label: 'My favorite stock',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: last_prices,
+            }]
+        };
 
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        }
+
+            // === include 'setup' then 'config' above ===
+            var myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+            function updateChart(chart, label, data) {
+
+                chart.data.labels.push(label);
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(data);
+                });
+                chart.update();
+            }
+
+            const websocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/chart_data/'
+            );
+            websocket.onmessage = function (event) {
+                let last_price = JSON.parse(event.data)['last_price']
+                let time = JSON.parse(event.data)['time']
+                updateChart(myChart, time, last_price)
+            }
+    </script>
 {% endblock %}
