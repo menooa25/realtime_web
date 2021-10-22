@@ -6,6 +6,7 @@ from channels.layers import get_channel_layer
 
 channel_layer = get_channel_layer()
 
+
 class TakeStock:
     def __init__(self, name, _min, _max):
         self.name = name
@@ -27,9 +28,9 @@ class TakeStock:
         else:
             self.__deference = price - self.__close
             self.__close = price
-            if price > self.__low:
+            if price > self.__high:
                 self.__high = price
-            elif price < self.__high:
+            elif price < self.__low:
                 self.__low = price
 
     def __initial_price(self, price):
@@ -73,7 +74,7 @@ def generate_order(stocks):
     return updated_stock
 
 
-
 @shared_task
 def get_take_stocks():
-    async_to_sync(channel_layer.group_send)('take_stocks_channel', {'type': 'send_stock', 'take_stocks': generate_order([fulad, verazi, shalord, zagros])})
+    async_to_sync(channel_layer.group_send)('take_stocks_channel', {'type': 'send_stock', 'take_stocks': generate_order(
+        [fulad, verazi, shalord, zagros])})
